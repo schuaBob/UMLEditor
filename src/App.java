@@ -15,6 +15,7 @@ public class App {
     }
 
     public static void startGUI() throws Exception {
-        new Mainframe();
+        Mainframe umlApp = new Mainframe();
+        umlApp.composeAndRun();
     }
 }
