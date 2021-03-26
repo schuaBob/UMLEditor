@@ -16,6 +16,6 @@ public class ClassShape extends Shape {
         Graphics2D g2d = (Graphics2D) g;
         g2d.drawRect(this.vertex.getX(), this.vertex.getY(), this.width, this.height);
         g2d.drawLine(this.vertex.getX(), this.vertex.getY() + this.height/3, this.vertex.getX() + this.width, this.vertex.getY() + this.height/3);
-        g2d.drawLine(this.vertex.getX(), this.vertex.getY() + this.height*2/3, this.vertex.getX() + this.width, this.vertex.getY() + this.height*2/3)
+        g2d.drawLine(this.vertex.getX(), this.vertex.getY() + this.height*2/3, this.vertex.getX() + this.width, this.vertex.getY() + this.height*2/3);
     }
 }
