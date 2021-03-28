@@ -2,8 +2,7 @@ package controller;
 
 import java.awt.event.MouseEvent;
 
-import geometry.ClassShape;
-import geometry.Shape;
+import geometry.*;
 import view.UMLCanvas;
 
 public class ModeMenu{
@@ -17,6 +16,9 @@ public class ModeMenu{
             case "class":
                 mode = new ClassMode();
                 break;
+            case "use-case":
+                mode = new UseCaseMode();
+                break;
             default:
                 break;
         }
@@ -26,9 +28,17 @@ public class ModeMenu{
 
     private class ClassMode extends ModeCore{
         @Override
-        public void mousePressed(MouseEvent e) {
-            super.mousePressed(e);
+        public void mouseClicked(MouseEvent e) {
             Shape obj = new ClassShape(e.getPoint());
+            canvas.addShape(obj);
+            canvas.repaint();
+        }
+    }
+
+    private class UseCaseMode extends ModeCore {
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            Shape obj = new UseCaseShape(e.getPoint());
             canvas.addShape(obj);
             canvas.repaint();
         }
