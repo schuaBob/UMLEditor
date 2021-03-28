@@ -1,4 +1,5 @@
 package geometry;
+import java.awt.Point;
 
 public class Line {
     private Point p1;

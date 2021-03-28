@@ -1,21 +1,21 @@
 package geometry;
 
 import java.awt.Graphics;
-import java.awt.Graphics2D;
-
+import java.awt.Point;
 public class ClassShape extends Shape {
     private Point vertex;
     private final int height = 120;
     private final int width = 100;
 
-    ClassShape(Point vertex) {
+    public ClassShape(Point vertex) {
         this.vertex = vertex;
     }
 
     public void draw(Graphics g) {
-        Graphics2D g2d = (Graphics2D) g;
-        g2d.drawRect(this.vertex.getX(), this.vertex.getY(), this.width, this.height);
-        g2d.drawLine(this.vertex.getX(), this.vertex.getY() + this.height/3, this.vertex.getX() + this.width, this.vertex.getY() + this.height/3);
-        g2d.drawLine(this.vertex.getX(), this.vertex.getY() + this.height*2/3, this.vertex.getX() + this.width, this.vertex.getY() + this.height*2/3);
+        int x = (int) this.vertex.getX();
+        int y = (int) this.vertex.getY();
+        g.drawRect(x, y, this.width, this.height);
+        g.drawLine(x, y + this.height/3, x + this.width, y + this.height/3);
+        g.drawLine(x, y + this.height*2/3, x + this.width, y + this.height*2/3);
     }
 }
