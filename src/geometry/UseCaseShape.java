@@ -1,15 +1,18 @@
 package geometry;
+
 import java.awt.Graphics;
 import java.awt.Point;
-public class UseCaseShape extends Shape{
-    private final int width = 100;
-    private final int height = 80;
+
+public class UseCaseShape extends ObjectFrame {
     public UseCaseShape(Point vertex) {
-        super(vertex);
+        this.height = 80;
+        this.width = 100;
+        this.x = (int) vertex.getX();
+        this.y = (int) vertex.getY();
     }
 
     @Override
     public void draw(Graphics g) {
-        g.drawOval(super.x, super.y, width, height);
+        g.drawOval(this.x, this.y, this.width, this.height);
     }
 }

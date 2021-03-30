@@ -72,10 +72,12 @@ public class UMLModebar extends JPanel {
                 JButton currentBtn = ((JButton) e.getSource());
                 canvas.setMode(mode);
                 currentBtn.setBackground(Color.BLACK);
-                if ( pressedBtn != null) {
+                canvas.setCurrentShape(null);
+                if (pressedBtn != null&&pressedBtn!=currentBtn) {
                     pressedBtn.setBackground(color);
                 }
                 pressedBtn = currentBtn;
+                canvas.repaint();
             }
 
         }

@@ -5,6 +5,8 @@ import java.awt.Graphics;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import controller.ModeCore;
+import geometry.Link;
+import geometry.ObjectFrame;
 import geometry.Shape;
 import java.util.Queue;
 import java.util.ArrayList;
@@ -16,9 +18,10 @@ public class UMLCanvas extends JPanel{
 
     private static final long serialVersionUID = 6555233771629347251L;
     private static List<UMLCanvas> canvasList = new ArrayList<UMLCanvas>();
-    private Queue<Shape> shapeQ = new LinkedList<Shape>();
+    private Queue<ObjectFrame> ofQ = new LinkedList<ObjectFrame>();
+    private List<Link> linkQ = new ArrayList<Link>();
+    private Shape selectedShape;
     private ModeCore currentMode;
-
     private UMLCanvas() {
         this.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
     }
@@ -39,17 +42,51 @@ public class UMLCanvas extends JPanel{
         }
     }
 
-    public void addShape(Shape s) {
-        this.shapeQ.add(s);
+    public void addObject(ObjectFrame of) {
+        this.ofQ.add(of);
+    }
+    public Queue<ObjectFrame> getAllObjects() {
+        return this.ofQ;
+    }
+    public void setCurrentShape(Shape s){
+        this.selectedShape = s;
+    }
+    public Shape getCurrentShape() {
+        return this.selectedShape;
+    }
+    public void addLink(Link l) {
+        this.linkQ.add(l);
+    }
+    public Link getLink(int i) {
+        while(i<0) {
+            i = this.linkQ.size() + i;
+        }
+        return this.linkQ.get(i);
+    }
+    public void removeLink(int i) {
+        while(i<0) {
+            i = this.linkQ.size() + i;
+        }
+        this.linkQ.remove(i);
     }
 
     @Override
     public void paint(Graphics g) {
         super.paint(g);
-        Iterator<Shape> sqIt = shapeQ.iterator();
+        Iterator<ObjectFrame> sqIt = ofQ.iterator();
         while(sqIt.hasNext()) {
             Shape s = sqIt.next();
             s.draw(g);
+        }
+        Iterator<Link> lIt = linkQ.iterator();
+        while(lIt.hasNext()) {
+            Link l = lIt.next();
+            l.draw(g);
+        }
+
+        // show ports if select
+        if(this.selectedShape!=null) {
+            ((ObjectFrame) this.selectedShape).showPorts(g);;
         }
     }
 
