@@ -4,8 +4,12 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
+import view.UMLCanvas;
+
 public abstract class ModeCore implements MouseListener, MouseMotionListener {
 
+    protected UMLCanvas canvas;
+    
     public void mouseClicked(MouseEvent e) {
 
     }

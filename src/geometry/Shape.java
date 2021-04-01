@@ -4,7 +4,7 @@ import java.awt.Point;
 public abstract class Shape {
     protected int x;
     protected int y;
-    public abstract void draw(Graphics g);
+    public void draw(Graphics g){};
     public void setPoint(Point p) {
         this.x = (int) p.getX();
         this.y = (int) p.getY();
