@@ -12,11 +12,12 @@ public class UMLCanvas extends JPanel {
 
     private static final long serialVersionUID = 6555233771629347251L;
     private static List<UMLCanvas> canvasList = new ArrayList<UMLCanvas>();
-    private List<ObjectFrame> ofQ = new LinkedList<ObjectFrame>();
+    private List<ObjectFrame> shapeL = new LinkedList<ObjectFrame>();
     private List<Link> linkL = new ArrayList<Link>();
     private List<Group> groupL = new ArrayList<Group>();
     private Shape selectedShape = null;
     private ModeCore currentMode = null;
+    private final int maxDepth = 99;
 
     private UMLCanvas() {
         this.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
@@ -38,24 +39,30 @@ public class UMLCanvas extends JPanel {
             this.addMouseMotionListener(this.currentMode);
         }
     }
-
-    public void addObject(ObjectFrame of) {
-        this.ofQ.add(of);
+    public void addShape(ObjectFrame oFrame){
+        oFrame.setDepth(shapeL, groupL);
+        if(oFrame.getDepth()<=this.maxDepth) {
+            this.shapeL.add(oFrame);
+        }
     }
 
     public List<ObjectFrame> getAllObjects() {
-        return this.ofQ;
+        return this.shapeL;
     }
 
     public void setCurrentShape(Shape s) {
         this.selectedShape = s;
     }
 
+    public List<Group> getGroupL() {
+        return this.groupL;
+    }
+
     public Shape getCurrentShape() {
         return this.selectedShape;
     }
 
-    public void addLink(Link l) {
+    public void addShape(Link l) {
         this.linkL.add(l);
     }
 
@@ -72,34 +79,25 @@ public class UMLCanvas extends JPanel {
         }
         this.linkL.remove(i);
     }
-    public List<Group> getGroupL() {
-        return groupL;
-    }
-    public void addGroup(Group g) {
-        this.groupL.add(g);
-    }
-    public Group getGroup(int i) {
-        if(groupL.isEmpty()) {
-            return null;
-        } else {
-            while (i < 0) {
-                i = this.groupL.size() + i;
-            }
-            return this.groupL.get(i);
+
+    public void addShape(Group g) {
+        g.setDepth(this.shapeL, this.groupL);
+        if(g.getDepth()<=this.maxDepth){
+            this.groupL.add(g);
         }
     }
-    public int getGroupIndex(Group g) {
-        return this.groupL.indexOf(g);
+
+    public Boolean containShape(Shape s){
+        return this.groupL.contains(s)||this.shapeL.contains(s);
     }
 
-    public void removeGroup(int i) {
-        this.groupL.remove(i);
+    public void removeShape(Group g) {
+        this.groupL.remove(g);
     }
-
     @Override
     public void paint(Graphics g) {
         super.paint(g);
-        Iterator<ObjectFrame> sqIt = ofQ.iterator();
+        Iterator<ObjectFrame> sqIt = shapeL.iterator();
         while (sqIt.hasNext()) {
             Shape s = sqIt.next();
             s.draw(g);
@@ -110,12 +108,13 @@ public class UMLCanvas extends JPanel {
             l.draw(g);
         }
         Iterator<Group> gIt = groupL.iterator();
-        while(gIt.hasNext()) {
+        while (gIt.hasNext()) {
             Group gp = gIt.next();
             gp.draw(g);
         }
         // show ports if select
         if (this.selectedShape != null) {
+            this.selectedShape.draw(g);
             this.selectedShape.showPorts(g);
         }
     }

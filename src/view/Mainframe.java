@@ -25,7 +25,6 @@ public class Mainframe extends JFrame{
         this.setJMenuBar(menubar);
         pnlRoot.add(modebar, BorderLayout.WEST);
         pnlRoot.add(canvas, BorderLayout.CENTER);
-        // this.pack();
         this.setVisible(true);
     }
 }

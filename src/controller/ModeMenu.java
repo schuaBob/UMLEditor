@@ -40,10 +40,15 @@ public class ModeMenu {
     public ActionListener getMenuMode(String s) {
         ActionListener mode = null;
         switch (s) {
-            case "cName":
+            case "cname":
                 mode = new ChangeName();
                 break;
-        
+            case "group":
+                mode = new GroupMode();
+                break;
+            case "ungroup":
+                mode = new UnGroupMode();
+                break;
             default:
                 break;
         }

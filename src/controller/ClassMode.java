@@ -12,7 +12,7 @@ public class ClassMode extends ModeCore{
     public void mousePressed(MouseEvent e) {
         ObjectFrame obj = new ClassShape(e.getPoint());
         obj.setPorts();
-        this.canvas.addObject(obj);
+        this.canvas.addShape(obj);
         this.canvas.repaint();
     }
 }

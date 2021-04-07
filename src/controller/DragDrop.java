@@ -27,7 +27,7 @@ public abstract class DragDrop extends ModeCore {
                 Link aLink;
                 try {
                     aLink = (Link) this.cLink.newInstance(of.getPort(q), of.getPort(q));
-                    this.canvas.addLink(aLink);
+                    this.canvas.addShape(aLink);
                     tempLink = aLink;
                     this.canvas.repaint();
                 } catch (InstantiationException | IllegalAccessException | IllegalArgumentException
@@ -42,10 +42,8 @@ public abstract class DragDrop extends ModeCore {
     @Override
     public void mouseDragged(MouseEvent e) {
         this.shapeQ = this.canvas.getAllObjects();
-        Point currentP = e.getPoint();
         Link l = this.canvas.getLink(-1);
-        l.resetPoints(l.getStartP(), currentP);
-        ;
+        l.setTail(e.getPoint());
         this.canvas.repaint();
     }
 
@@ -69,7 +67,7 @@ public abstract class DragDrop extends ModeCore {
                         }
                     }
                     if (!sameObj) {
-                        l.setEndP(of.getPort(q));
+                        l.setTailPort(of.getPort(q));
                         inBound = true;
                     }
                     break;

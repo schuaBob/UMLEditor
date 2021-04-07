@@ -7,41 +7,33 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Group extends Shape {
-    protected Point p1;
-    protected Point p2;
     private List<Shape> ShapesContain = new ArrayList<Shape>();
 
-    public Group(Point p1, Point p2) {
-        setP1(p1);
-        setP2(p2);
-    }
-
-    public void setP1(Point p1) {
-        this.p1 = p1;
-    }
-
-    public void setP2(Point p2) {
-        this.p2 = p2;
+    public Group(Point head, Point tail) {
+        this.head = head;
+        this.tail = tail;
     }
 
     public List<Shape> getShapesContain() {
         return this.ShapesContain;
     }
 
-    public Boolean include(ObjectFrame of) {
+    public Boolean include(Shape s) {
         Boolean result = false;
-        if (((this.p1.getX() <= of.x) && (this.p1.getY() <= of.y))
-                && ((this.p2.getX() >= of.x + of.width) && (this.p2.getY() >= of.y + of.height))) {
+        if (((this.head.getX() <= s.head.getX()) && (this.head.getY() <= s.head.getY()))
+                && (((this.tail.getX() >= s.tail.getX()) &&( this.tail.getY() >= s.tail.getY())))) {
             result = true;
         }
         return result;
     }
 
-    public Boolean include(Point p) {
+    public Boolean duplicate(ObjectFrame oFrame){
         Boolean result = false;
-        if ((this.p1.getX() <= p.getX() && p.getX() <= this.p2.getX())
-                && (this.p1.getY() <= p.getY() && p.getY() <= this.p2.getY())) {
-            result = true;
+        for(Shape s:ShapesContain) {
+            if(((Group) s).getShapesContain().contains(oFrame)){
+                result = true;
+                break;
+            }
         }
         return result;
     }
@@ -51,20 +43,20 @@ public class Group extends Shape {
         int alpha = 80;
         Color c = g.getColor();
         g.setColor(new Color(255, 140, 100, alpha));
-        g.fillRect((int) p1.getX(), (int) p1.getY(), (int) (p2.getX() - p1.getX()), (int) (p2.getY() - p1.getY()));
+        g.fillRect((int) head.getX(), (int) head.getY(), (int) (tail.getX() - head.getX()), (int) (tail.getY() - head.getY()));
         g.setColor(new Color(255, 140, 100));
-        g.drawRect((int) p1.getX(), (int) p1.getY(), (int) (p2.getX() - p1.getX()), (int) (p2.getY() - p1.getY()));
+        g.drawRect((int) head.getX(), (int) head.getY(), (int) (tail.getX() - head.getX()), (int) (tail.getY() - head.getY()));
         g.setColor(c);
     }
 
     @Override
-    public void resetLocation(Point previous, Point now) {
-        int dx = (int) (now.getX() - previous.getX());
-        int dy = (int) (now.getY() - previous.getY());
-        this.p1.translate(dx, dy);
-        this.p2.translate(dx, dy);
+    public void resetLocation(Point clickedPoint, Point now) {
+        int dx = (int) (now.getX() - clickedPoint.getX());
+        int dy = (int) (now.getY() - clickedPoint.getY());
+        this.head.translate(dx, dy);
+        this.tail.translate(dx, dy);
         for (Shape s : ShapesContain) {
-            s.resetLocation(previous, now);
+            s.resetLocation(clickedPoint, now);
         }
     }
 

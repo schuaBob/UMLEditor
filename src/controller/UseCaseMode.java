@@ -12,7 +12,7 @@ public class UseCaseMode extends ModeCore {
     public void mousePressed(MouseEvent e) {
         ObjectFrame obj = new UseCaseShape(e.getPoint());
         obj.setPorts();
-        canvas.addObject(obj);
+        canvas.addShape(obj);
         canvas.repaint();
     }
 }

@@ -8,7 +8,6 @@ public class Port {
     private Point drawingPoint;
     private List<Link> connectList = new ArrayList<Link>();
 
-
     public void setPoint(double x, double y, double offsetX, double offsetY) {
         this.vertex = new Point((int) x, (int) y);
         this.drawingPoint = new Point((int) (x + offsetX), (int) (y + offsetY));

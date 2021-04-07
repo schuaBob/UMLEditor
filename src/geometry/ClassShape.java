@@ -8,16 +8,21 @@ public class ClassShape extends ObjectFrame {
     public ClassShape(Point vertex) {
         this.height = 120;
         this.width = 100;
-        this.x = (int) vertex.getX();
-        this.y = (int) vertex.getY();
+        this.head = vertex;
+        this.tail = new Point((int) (vertex.getX()+this.width), (int) (vertex.getY()+this.height));
     }
 
     public void draw(Graphics g) {
-        g.drawRect(this.x, this.y, this.width, this.height);
-        g.drawLine(this.x, this.y + this.height / 3, this.x + this.width, this.y + this.height / 3);
-        g.drawLine(this.x, this.y + this.height * 2 / 3, this.x + this.width, this.y + this.height * 2 / 3);
-        if(this.getName()!=null) {
-            g.drawString(this.getName(), this.x+2, this.y+this.height/6);
+        // draw shape
+        int x = (int) this.head.getX();
+        int y = (int) this.head.getY();
+        g.drawRect(x, y, this.width, this.height);
+        g.drawLine(x, y + this.height / 3, x + this.width, y + this.height / 3);
+        g.drawLine(x, y + this.height * 2 / 3, x + this.width, y + this.height * 2 / 3);
+
+        // draw name
+        if (this.getName() != null) {
+            g.drawString(this.getName(), x + 2, y + this.height / 6);
         }
     }
 }

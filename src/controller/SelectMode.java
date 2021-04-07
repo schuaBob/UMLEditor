@@ -3,7 +3,6 @@ package controller;
 import geometry.*;
 import geometry.Shape;
 import view.UMLCanvas;
-
 import java.awt.*;
 import java.util.*;
 import java.util.List;
@@ -13,7 +12,7 @@ import java.awt.event.*;
 
 public class SelectMode extends ModeCore {
     private Point clickedP;
-    private int groupIndex = -1;
+
     SelectMode(UMLCanvas canvas) {
         this.canvas = canvas;
     }
@@ -22,19 +21,13 @@ public class SelectMode extends ModeCore {
     public void mousePressed(MouseEvent e) {
         this.canvas.setCurrentShape(null);
         this.clickedP = e.getPoint();
-        Iterator<Shape> sIt = Stream.concat(this.canvas.getGroupL().stream(),this.canvas.getAllObjects().stream()).collect(Collectors.toList()).iterator();
-        // Iterator<Shape> sIt = this.canvas.getAllObjects().iterator();
-        while (sIt.hasNext()) {
-            Shape shape = sIt.next();
+        Iterator<Shape> shapeIt = this.getShapeIt();
+        while (shapeIt != null && shapeIt.hasNext()) {
+            Shape shape = shapeIt.next();
             if (shape.include(this.clickedP)) {
                 this.canvas.setCurrentShape(shape);
                 break;
             }
-        }
-        if (this.canvas.getCurrentShape() == null) {
-            Group gp = new Group(e.getPoint(), e.getPoint());
-            this.canvas.addGroup(gp);
-            groupIndex = this.canvas.getGroupIndex(gp);
         }
         this.canvas.repaint();
 
@@ -43,33 +36,56 @@ public class SelectMode extends ModeCore {
     @Override
     public void mouseDragged(MouseEvent e) {
         Shape obj = this.canvas.getCurrentShape();
-        Group g = this.canvas.getGroup(groupIndex);
-        if (obj != null) {
+        if (obj == null) {
+            System.out.println("obj is null");
+            Group gp = new Group(this.clickedP, this.clickedP);
+            this.canvas.setCurrentShape(gp);
+        } else if (this.canvas.containShape(obj)) {
+            System.out.println("obj is not null and contain");
+            // group or shape is already added to canvas, resetLocation
             obj.resetLocation(this.clickedP, e.getPoint());
+        } else {
+            System.out.println("obj is not null and don't contain");
+            // currentShape isn't added to canvas, which is a group, resize
+            obj.setTail(e.getPoint());
         }
-        if (obj==null && g != null) {
-            g.setP2(e.getPoint());
-        }
-        this.canvas.repaint();
         this.clickedP = e.getPoint();
+        this.canvas.repaint();
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        Group currentGroup = this.canvas.getGroup(groupIndex);
-        if (this.canvas.getCurrentShape()==null && currentGroup != null) {
-            Iterator<ObjectFrame> it = this.canvas.getAllObjects().iterator();
-            List<Shape> sc = currentGroup.getShapesContain();
-            while (it.hasNext()) {
-                ObjectFrame of = it.next();
-                if (currentGroup.include(of)) {
-                    sc.add(of);
+        Shape obj = this.canvas.getCurrentShape();
+        if (obj != null && !this.canvas.containShape(obj)) {
+            Group gObj = ((Group) obj);
+            Iterator<Group> groupIt = this.canvas.getGroupL().iterator();
+            List<Shape> sc = ((Group) obj).getShapesContain();
+            while (groupIt.hasNext()) {
+                Group g = groupIt.next();
+                if (gObj.include(g)) {
+                    sc.add(g);
                 }
             }
-            if(sc.size()==0) {
-                this.canvas.removeGroup(groupIndex);
+            Iterator<ObjectFrame> shapeIt = this.canvas.getAllObjects().iterator();
+            List<Shape> sL = new LinkedList<Shape>();
+            while (shapeIt.hasNext()) {
+                ObjectFrame oFrame = shapeIt.next();
+                if(gObj.include(oFrame)){
+                    if (sc.size() == 0 || !gObj.duplicate(oFrame)) {
+                        sL.add(oFrame);
+                    }
+                }
+            }
+            sc.addAll(sL);
+            if (sc.size() <= 1) {
+                this.canvas.setCurrentShape(null);
             }
         }
         canvas.repaint();
+    }
+
+    private Iterator<Shape> getShapeIt() {
+        return Stream.concat(this.canvas.getGroupL().stream(), this.canvas.getAllObjects().stream())
+                .sorted(Comparator.comparingInt(Shape::getDepth).reversed()).collect(Collectors.toList()).iterator();
     }
 }
