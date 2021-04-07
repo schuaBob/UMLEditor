@@ -14,5 +14,8 @@ public class UseCaseShape extends ObjectFrame {
     @Override
     public void draw(Graphics g) {
         g.drawOval(this.x, this.y, this.width, this.height);
+        if(this.getName()!=null) {
+            g.drawString(this.getName(), this.x+2, this.y+this.height/2);
+        }
     }
 }

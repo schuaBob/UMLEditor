@@ -6,34 +6,35 @@ import view.UMLCanvas;
 
 import java.awt.*;
 import java.util.*;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.awt.event.*;
 
 public class SelectMode extends ModeCore {
     private Point clickedP;
-    private Queue<ObjectFrame> shapeQ = new LinkedList<ObjectFrame>();
-
+    private int groupIndex = -1;
     SelectMode(UMLCanvas canvas) {
         this.canvas = canvas;
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
+        this.canvas.setCurrentShape(null);
         this.clickedP = e.getPoint();
-        this.shapeQ = this.canvas.getAllObjects();
-        Boolean selected = false;
-        Iterator<ObjectFrame> sqIt = this.shapeQ.iterator();
-        while (sqIt.hasNext()) {
-            ObjectFrame of = (ObjectFrame) sqIt.next();
-            if (of.include(this.clickedP)) {
-                this.canvas.setCurrentShape(of);
-                selected = true;
+        Iterator<Shape> sIt = Stream.concat(this.canvas.getGroupL().stream(),this.canvas.getAllObjects().stream()).collect(Collectors.toList()).iterator();
+        // Iterator<Shape> sIt = this.canvas.getAllObjects().iterator();
+        while (sIt.hasNext()) {
+            Shape shape = sIt.next();
+            if (shape.include(this.clickedP)) {
+                this.canvas.setCurrentShape(shape);
                 break;
             }
         }
-        if (!selected) {
-            this.canvas.setCurrentShape(null);
+        if (this.canvas.getCurrentShape() == null) {
             Group gp = new Group(e.getPoint(), e.getPoint());
-            this.canvas.setSelectedGroup(gp);;
+            this.canvas.addGroup(gp);
+            groupIndex = this.canvas.getGroupIndex(gp);
         }
         this.canvas.repaint();
 
@@ -42,19 +43,33 @@ public class SelectMode extends ModeCore {
     @Override
     public void mouseDragged(MouseEvent e) {
         Shape obj = this.canvas.getCurrentShape();
-        Group g = this.canvas.getSelectedGroup();
+        Group g = this.canvas.getGroup(groupIndex);
         if (obj != null) {
-            ((ObjectFrame) obj).resetLocation(this.clickedP, e.getPoint());
+            obj.resetLocation(this.clickedP, e.getPoint());
         }
-        if(g!=null) {
+        if (obj==null && g != null) {
             g.setP2(e.getPoint());
         }
         this.canvas.repaint();
         this.clickedP = e.getPoint();
     }
-    
+
     @Override
     public void mouseReleased(MouseEvent e) {
-        
+        Group currentGroup = this.canvas.getGroup(groupIndex);
+        if (this.canvas.getCurrentShape()==null && currentGroup != null) {
+            Iterator<ObjectFrame> it = this.canvas.getAllObjects().iterator();
+            List<Shape> sc = currentGroup.getShapesContain();
+            while (it.hasNext()) {
+                ObjectFrame of = it.next();
+                if (currentGroup.include(of)) {
+                    sc.add(of);
+                }
+            }
+            if(sc.size()==0) {
+                this.canvas.removeGroup(groupIndex);
+            }
+        }
+        canvas.repaint();
     }
 }

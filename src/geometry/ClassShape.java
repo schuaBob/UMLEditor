@@ -16,5 +16,8 @@ public class ClassShape extends ObjectFrame {
         g.drawRect(this.x, this.y, this.width, this.height);
         g.drawLine(this.x, this.y + this.height / 3, this.x + this.width, this.y + this.height / 3);
         g.drawLine(this.x, this.y + this.height * 2 / 3, this.x + this.width, this.y + this.height * 2 / 3);
+        if(this.getName()!=null) {
+            g.drawString(this.getName(), this.x+2, this.y+this.height/6);
+        }
     }
 }

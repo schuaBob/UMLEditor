@@ -6,7 +6,7 @@ import java.awt.Point;
 import java.lang.reflect.*;
 public abstract class DragDrop extends ModeCore {
     private Link tempLink = null;
-    private Queue<ObjectFrame> shapeQ = new LinkedList<ObjectFrame>();
+    private List<ObjectFrame> shapeQ = new LinkedList<ObjectFrame>();
     private Constructor<?> cLink;
     DragDrop(String className){
         try {

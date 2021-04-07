@@ -10,9 +10,16 @@ public abstract class ObjectFrame extends Shape {
     protected int height;
     protected int width;
     private final int offset = 5;
+    private String name = null;
     private List<Port> portList = new ArrayList<Port>(Arrays.asList(new Port(), new Port(), new Port(), new Port()));
-    // private List<Shape> connected = new ArrayList<Shape>();
 
+
+    public String getName() {
+        return this.name;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
     public Boolean include(Point p) {
         Boolean result = false;
         if ((this.x <= p.getX() && p.getX() <= this.x + this.width)
@@ -22,20 +29,12 @@ public abstract class ObjectFrame extends Shape {
         return result;
     }
     public void setPorts() {
-        // List<Port> tempList = new ArrayList<Port>();
-        // tempList.add(new Port(this.x + this.width / 2 , this.y, - this.offset / 2, - this.offset));
-        // tempList.add(new Port(this.x + this.width, this.y + this.height / 2 ,0,- this.offset / 2));
-        // tempList.add(new Port(this.x + this.width / 2 , this.y + this.height, - this.offset / 2,0));
-        // tempList.add(new Port(this.x, this.y + this.height / 2,  - this.offset,  - this.offset / 2));
         this.portList.get(0).setPoint(this.x + this.width / 2 , this.y, - this.offset / 2, - this.offset);
         this.portList.get(1).setPoint(this.x + this.width, this.y + this.height / 2 ,0,- this.offset / 2);
         this.portList.get(2).setPoint(this.x + this.width / 2 , this.y + this.height, - this.offset / 2,0);
         this.portList.get(3).setPoint(this.x, this.y + this.height / 2,  - this.offset,  - this.offset / 2);
-        // for(int i=0;i<portList.size();i++) {
-        //     tempList.get(i).setConnectList(this.portList.get(i).getConnectList());
-        // }
-        // portList.clear();
     }
+    @Override
     public void showPorts(Graphics g) {
         for(Port p: portList) {
             g.fillRect((int) p.getDrawingPoint().getX(), (int) p.getDrawingPoint().getY(), this.offset, this.offset);

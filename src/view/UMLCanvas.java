@@ -12,12 +12,11 @@ public class UMLCanvas extends JPanel {
 
     private static final long serialVersionUID = 6555233771629347251L;
     private static List<UMLCanvas> canvasList = new ArrayList<UMLCanvas>();
-    private Queue<ObjectFrame> ofQ = new LinkedList<ObjectFrame>();
+    private List<ObjectFrame> ofQ = new LinkedList<ObjectFrame>();
     private List<Link> linkL = new ArrayList<Link>();
     private List<Group> groupL = new ArrayList<Group>();
     private Shape selectedShape = null;
     private ModeCore currentMode = null;
-    private Group selectedGroup = null;
 
     private UMLCanvas() {
         this.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
@@ -44,7 +43,7 @@ public class UMLCanvas extends JPanel {
         this.ofQ.add(of);
     }
 
-    public Queue<ObjectFrame> getAllObjects() {
+    public List<ObjectFrame> getAllObjects() {
         return this.ofQ;
     }
 
@@ -73,15 +72,30 @@ public class UMLCanvas extends JPanel {
         }
         this.linkL.remove(i);
     }
+    public List<Group> getGroupL() {
+        return groupL;
+    }
     public void addGroup(Group g) {
         this.groupL.add(g);
     }
-    public void setSelectedGroup(Group selectedGroup) {
-        this.selectedGroup = selectedGroup;
+    public Group getGroup(int i) {
+        if(groupL.isEmpty()) {
+            return null;
+        } else {
+            while (i < 0) {
+                i = this.groupL.size() + i;
+            }
+            return this.groupL.get(i);
+        }
     }
-    public Group getSelectedGroup() {
-        return selectedGroup;
+    public int getGroupIndex(Group g) {
+        return this.groupL.indexOf(g);
     }
+
+    public void removeGroup(int i) {
+        this.groupL.remove(i);
+    }
+
     @Override
     public void paint(Graphics g) {
         super.paint(g);
@@ -95,10 +109,14 @@ public class UMLCanvas extends JPanel {
             Link l = lIt.next();
             l.draw(g);
         }
-
+        Iterator<Group> gIt = groupL.iterator();
+        while(gIt.hasNext()) {
+            Group gp = gIt.next();
+            gp.draw(g);
+        }
         // show ports if select
         if (this.selectedShape != null) {
-            ((ObjectFrame) this.selectedShape).showPorts(g);
+            this.selectedShape.showPorts(g);
         }
     }
 

@@ -1,6 +1,7 @@
 package controller;
 
 import view.UMLCanvas;
+import java.awt.event.ActionListener;
 
 public class ModeMenu {
     private UMLCanvas canvas;
@@ -32,6 +33,19 @@ public class ModeMenu {
             break;
         default:
             break;
+        }
+        return mode;
+    }
+
+    public ActionListener getMenuMode(String s) {
+        ActionListener mode = null;
+        switch (s) {
+            case "cName":
+                mode = new ChangeName();
+                break;
+        
+            default:
+                break;
         }
         return mode;
     }
