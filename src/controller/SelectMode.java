@@ -37,15 +37,12 @@ public class SelectMode extends ModeCore {
     public void mouseDragged(MouseEvent e) {
         Shape obj = this.canvas.getCurrentShape();
         if (obj == null) {
-            System.out.println("obj is null");
             Group gp = new Group(this.clickedP, this.clickedP);
             this.canvas.setCurrentShape(gp);
         } else if (this.canvas.containShape(obj)) {
-            System.out.println("obj is not null and contain");
             // group or shape is already added to canvas, resetLocation
             obj.resetLocation(this.clickedP, e.getPoint());
         } else {
-            System.out.println("obj is not null and don't contain");
             // currentShape isn't added to canvas, which is a group, resize
             obj.setTail(e.getPoint());
         }

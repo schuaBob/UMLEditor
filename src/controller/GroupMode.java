@@ -10,5 +10,6 @@ public class GroupMode implements ActionListener {
         UMLCanvas canvas = UMLCanvas.getInstance();
         Group g = (Group) canvas.getCurrentShape();
         canvas.addShape(g);
+        canvas.repaint();
     }
 }

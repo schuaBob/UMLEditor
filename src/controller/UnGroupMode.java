@@ -11,5 +11,7 @@ public class UnGroupMode implements ActionListener {
         UMLCanvas canvas = UMLCanvas.getInstance();
         Group g = (Group) canvas.getCurrentShape();
         canvas.removeShape(g);
+        canvas.setCurrentShape(null);
+        canvas.repaint();
     }
 }
